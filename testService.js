@@ -1,0 +1,17 @@
+const express = require("express");
+const morgan = require("morgan");
+
+const app = express();
+app.use(morgan("dev"));
+
+
+app.get("/stress-test", (req, res) => {
+    for (let i = 0; i < 10000000000; i++) {
+        // simulate work, reduce number to avoid blocking too long
+    }
+    res.send("hello world test");
+}); 
+
+app.listen(3002, () => {
+    console.log(`stress-test server is running on http://localhost:3002`);
+});
