@@ -41,8 +41,7 @@ A distributed microservices system built with **Node.js**, **Express.js**, **Rab
 | **RabbitMQ** | Event-driven async messaging broker |
 | **Docker Compose** | Local orchestration and containerization |
 
-## 🛠️ What is Inf+
-rastructure?
+## 🛠️ What is Infrastructure?
 
 In a microservices world, **"Infrastructure"** refers to the foundational systems that your application services rely on to store data, communicate, and run reliably. These are managed separately from your application business logic.
 
@@ -97,3 +96,4 @@ docker-compose up --build
 
 - **RabbitMQ Management UI**: http://localhost:15672 (Credentials: `guest` / `guest`)
 - **API Gateway Health Check**: http://localhost:3000/health
+
