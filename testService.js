@@ -10,8 +10,8 @@ app.get("/stress-test", (req, res) => {
         // simulate work, reduce number to avoid blocking too long
     }
     res.send("hello world test");
-}); 
+});
 
-app.listen(3002, () => {
-    console.log(`stress-test server is running on http://localhost:3002`);
+app.listen(4003, () => {
+    console.log(`stress-test server is running on http://localhost:4003`);
 });

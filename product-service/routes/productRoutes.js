@@ -37,9 +37,14 @@ router.get("/", async (req, res) => {
     }
 });
 
+const mongoose = require("mongoose");
+
 // ─── GET /:id — Get single product ──────────────────────────────────
 router.get("/:id", async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "Invalid product ID format" });
+        }
         const product = await Product.findById(req.params.id);
         if (!product) {
             return res.status(404).json({ error: "Product not found" });
@@ -79,6 +84,9 @@ router.post("/", async (req, res) => {
 // ─── PUT /:id — Update product ──────────────────────────────────────
 router.put("/:id", async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "Invalid product ID format" });
+        }
         const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true,
@@ -109,6 +117,9 @@ router.put("/:id", async (req, res) => {
 // ─── DELETE /:id — Soft delete product ──────────────────────────────
 router.delete("/:id", async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "Invalid product ID format" });
+        }
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             { isActive: false },

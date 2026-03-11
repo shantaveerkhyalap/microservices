@@ -6,6 +6,7 @@ const { publishMessage } = require("../../shared/rabbitmq");
 
 // ─── POST /register ─────────────────────────────────────────────────
 router.post("/register", async (req, res) => {
+    console.log("Registration request received:", req.body.email);
     try {
         const { name, email, password } = req.body;
 
@@ -37,8 +38,8 @@ router.post("/register", async (req, res) => {
             token,
         });
     } catch (error) {
-        console.error("Registration error:", error.message);
-        res.status(500).json({ error: "Registration failed" });
+        console.error("❌ Registration error [DEBUG_TAG]:", error);
+        res.status(500).json({ error: `Registration failed [DEBUG_TAG]: ${error.message}` });
     }
 });
 

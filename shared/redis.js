@@ -10,16 +10,16 @@ function getRedisClient() {
     client = new Redis(REDIS_URL, {
         retryStrategy: (times) => {
             const delay = Math.min(times * 500, 5000);
-            console.log(`🔄 Redis reconnecting in ${delay}ms... (attempt ${times})`);
+            console.log(`Redis reconnecting in ${delay}ms... (attempt ${times})`);
             return delay;
         },
         maxRetriesPerRequest: 3,
         lazyConnect: false,
     });
 
-    client.on("connect", () => console.log("✅ Redis connected"));
-    client.on("error", (err) => console.error("❌ Redis error:", err.message));
-    client.on("close", () => console.log("⚠️  Redis connection closed"));
+    client.on("connect", () => console.log("Redis connected"));
+    client.on("error", (err) => console.error("Redis error:", err.message));
+    client.on("close", () => console.log("Redis connection closed"));
 
     return client;
 }

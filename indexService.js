@@ -11,6 +11,6 @@ app.get("/", (req, res) => {
     res.send("hello world");
 });
 
-app.listen(3001, () => {
-    console.log(`server is running on http://localhost:3001`);
+app.listen(4002, () => {
+    console.log(`server is running on http://localhost:4002`);
 });

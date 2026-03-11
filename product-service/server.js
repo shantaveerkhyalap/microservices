@@ -1,4 +1,5 @@
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, ".env") });
 const express = require("express");
 const morgan = require("morgan");
 const { connectDB } = require("../shared/db");
@@ -14,16 +15,13 @@ const productRoutes = require("./routes/productRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 3002;
-const DB_NAME = process.env.DB_NAME || "products_db";
+const DB_NAME = process.env.DB_NAME;
 
 // ─── Middleware ──────────────────────────────────────────────────────
 app.use(express.json());
 app.use(morgan("dev"));
 
-// ─── Routes ─────────────────────────────────────────────────────────
-app.use("/", productRoutes);
-
-// ─── Health Check ───────────────────────────────────────────────────
+// ─── Utility Routes ──────────────────────────────────────────────────
 app.get("/health", (req, res) => {
     res.json({
         service: "Product Service",
@@ -33,11 +31,17 @@ app.get("/health", (req, res) => {
     });
 });
 
+app.get("/favicon.ico", (req, res) => res.status(204).end());
+
+// ─── Routes ─────────────────────────────────────────────────────────
+app.use("/", productRoutes);
+
 // ─── Initialize Service ─────────────────────────────────────────────
 async function startService() {
     try {
         // Connect to MongoDB
-        await connectDB(DB_NAME);
+        const mongoose = require("mongoose");
+        await connectDB(mongoose, DB_NAME);
 
         // Setup RabbitMQ exchanges
         await setupExchange("product_exchange", "fanout");

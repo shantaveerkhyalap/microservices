@@ -41,7 +41,8 @@ A distributed microservices system built with **Node.js**, **Express.js**, **Rab
 | **RabbitMQ** | Event-driven async messaging broker |
 | **Docker Compose** | Local orchestration and containerization |
 
-## 🛠️ What is Infrastructure?
+## 🛠️ What is Inf+
+rastructure?
 
 In a microservices world, **"Infrastructure"** refers to the foundational systems that your application services rely on to store data, communicate, and run reliably. These are managed separately from your application business logic.
 
@@ -51,7 +52,7 @@ In this project, the infrastructure consists of:
 *   **What it is:** A NoSQL database used for storing data.
 *   **Why it's Infrastructure:** Each service (User, Product, Order) has its own independent database. This ensures **Data Isolation** - if the User database fails, the Product catalog can still be browsed.
 
-### 2. RabbitMQ (The Communication Bus)
+### 2. RabbitMQ (The Communication Bus);
 *   **What it is:** A message broker that lets services "talk" asynchronously.
 *   **Why it's Infrastructure:** Instead of services calling each other directly (which makes them fragile), they send "messages" to RabbitMQ. RabbitMQ safely holds these messages even if a service is down, ensuring **Zero Data Loss**.
 
