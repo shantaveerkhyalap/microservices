@@ -2,9 +2,9 @@ name: Microservices CI/CD Pipeline
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, appu]
   pull_request:
-    branches: [main]
+    branches: [appu]
 
 env:
   REGISTRY: ghcr.io
@@ -154,3 +154,4 @@ jobs:
           git add k8s/*.yaml
           git commit -m "chore(k8s): update images to ${{ github.sha }}" || echo "No changes to commit"
           git push
+
