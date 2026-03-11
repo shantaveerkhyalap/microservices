@@ -12,10 +12,10 @@ async function connectRabbitMQ() {
     connection = await amqp.connect(RABBITMQ_URL);
     channel = await connection.createChannel();
 
-    // Fair dispatch — one message at a time per consumer
+    // Fair dispatch one message at a time per consumer
     await channel.prefetch(1);
 
-    console.log("✅ RabbitMQ connected successfully");
+    console.log("RabbitMQ connected successfully");
 
     // Auto-reconnect on connection close
     connection.on("close", () => {
@@ -26,15 +26,15 @@ async function connectRabbitMQ() {
     });
 
     connection.on("error", (err) => {
-      console.error("❌ RabbitMQ connection error:", err.message);
+      console.error("RabbitMQ connection error:", err.message);
       connection = null;
       channel = null;
     });
 
     return channel;
   } catch (error) {
-    console.error("❌ Failed to connect to RabbitMQ:", error.message);
-    console.log("🔄 Retrying RabbitMQ connection in 5s...");
+    console.error("Failed to connect to RabbitMQ:", error.message);
+    console.log("Retrying RabbitMQ connection in 5s...");
     await new Promise((resolve) => setTimeout(resolve, 5000));
     return connectRabbitMQ();
   }
@@ -54,6 +54,9 @@ async function setupExchange(exchangeName, exchangeType = "fanout") {
 }
 
 async function setupQueue(queueName, exchangeName, routingKey = "") {
+  // Ensure the exchange and its DLX exist before binding
+  await setupExchange(exchangeName);
+
   const ch = await connectRabbitMQ();
   const dlxExchange = `${exchangeName}_dlx`;
   const dlqName = `${queueName}_dlq`;

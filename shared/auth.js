@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "microservices_super_secret_key_2024";
+// Get secret dynamically so it always reflects the current environment
+const getJwtSecret = () => process.env.JWT_SECRET || "microservices_super_secret_key_2024";
 const JWT_EXPIRY = process.env.JWT_EXPIRY || "24h";
 
 // A simple in-memory blacklist (since we removed Redis for intermediate level)
@@ -8,7 +10,7 @@ const JWT_EXPIRY = process.env.JWT_EXPIRY || "24h";
 const tokenBlacklist = new Set();
 
 function generateToken(payload) {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRY });
+    return jwt.sign(payload, getJwtSecret(), { expiresIn: JWT_EXPIRY });
 }
 
 async function verifyToken(token) {
@@ -16,9 +18,10 @@ async function verifyToken(token) {
         if (tokenBlacklist.has(token)) {
             throw new Error("Token has been invalidated (logged out)");
         }
-        const decoded = jwt.verify(token, JWT_SECRET);
+        const decoded = jwt.verify(token, getJwtSecret());
         return decoded;
     } catch (error) {
+        console.error("JWT Verification Error Details:", error.message);
         throw error;
     }
 }
@@ -30,4 +33,4 @@ function blacklistToken(token) {
     return true;
 }
 
-module.exports = { generateToken, verifyToken, blacklistToken, JWT_SECRET };
+module.exports = { generateToken, verifyToken, blacklistToken };

@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: microservices/api-gateway:latest
+          image: ghcr.io/shantaveerkhyalap/api-gateway:latest
           ports:
             - containerPort: 3000
           envFrom:
@@ -275,7 +275,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: microservices/order-service:latest
+          image: ghcr.io/shantaveerkhyalap/order-service:latest
           ports:
             - containerPort: 3003
           envFrom:

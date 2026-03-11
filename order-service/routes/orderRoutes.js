@@ -82,9 +82,14 @@ router.get("/", async (req, res) => {
     }
 });
 
+const mongoose = require("mongoose");
+
 // ─── GET /:id — Get order by ID ─────────────────────────────────────
 router.get("/:id", async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "Invalid order ID format" });
+        }
         const order = await Order.findById(req.params.id);
         if (!order) {
             return res.status(404).json({ error: "Order not found" });
@@ -99,6 +104,9 @@ router.get("/:id", async (req, res) => {
 // ─── PUT /:id/status — Update order status ──────────────────────────
 router.put("/:id/status", async (req, res) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+            return res.status(400).json({ error: "Invalid order ID format" });
+        }
         const { status } = req.body;
         const validStatuses = ["pending", "confirmed", "processing", "shipped", "delivered", "cancelled"];
 

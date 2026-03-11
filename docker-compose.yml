@@ -2,26 +2,6 @@ version: "3.8"
 
 services:
   # ─── Infrastructure ──────────────────────────────────────────────
-  rabbitmq:
-    image: rabbitmq:3.13-management-alpine
-    container_name: rabbitmq
-    ports:
-      - "5672:5672" # AMQP protocol
-      - "15672:15672" # Management UI
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
-    healthcheck:
-      test: [ "CMD", "rabbitmq-diagnostics", "check_running" ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-    networks:
-      - microservices-net
-    restart: unless-stopped
 
   mongodb:
     image: mongo:7.0
@@ -53,7 +33,7 @@ services:
       USER_SERVICE_URL: http://user-service:3001
       PRODUCT_SERVICE_URL: http://product-service:3002
       ORDER_SERVICE_URL: http://order-service:3003
-      JWT_SECRET: microservices_super_secret_key_2024
+      JWT_SECRET: 7b9e1c2a4f6d8b0e3a5c7d9f1b2e4a6c8d0f2e4b6d8a0c2e4f6a8b
     depends_on:
       user-service:
         condition: service_healthy
@@ -76,13 +56,11 @@ services:
     environment:
       PORT: 3001
       DB_NAME: users_db
-      MONGO_URI: mongodb://mongodb:27017
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
-      JWT_SECRET: microservices_super_secret_key_2024
+      MONGO_URI: mongodb+srv://Microservices:bKYdqlaYFoBezdrs@cluster0.tx6by.mongodb.net
+      RABBITMQ_URL: amqps://njzzrtsi:QMxQSYe7L4xzEvVHlfpeSpFrdl8WXnSC@campbell.lmq.cloudamqp.com/njzzrtsi
+      JWT_SECRET: 7b9e1c2a4f6d8b0e3a5c7d9f1b2e4a6c8d0f2e4b6d8a0c2e4f6a8b
     depends_on:
       mongodb:
-        condition: service_healthy
-      rabbitmq:
         condition: service_healthy
     networks:
       - microservices-net
@@ -99,12 +77,11 @@ services:
     environment:
       PORT: 3002
       DB_NAME: products_db
-      MONGO_URI: mongodb://mongodb:27017
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      MONGO_URI: mongodb+srv://Microservices:bKYdqlaYFoBezdrs@cluster0.tx6by.mongodb.net
+      RABBITMQ_URL: amqps://njzzrtsi:QMxQSYe7L4xzEvVHlfpeSpFrdl7WXnSC@campbell.lmq.cloudamqp.com/njzzrtsi
+      JWT_SECRET: 7b9e1c2a4f6d8b0e3a5c7d9f1b2e4a6c8d0f2e4b6d8a0c2e4f6a8b
     depends_on:
       mongodb:
-        condition: service_healthy
-      rabbitmq:
         condition: service_healthy
     networks:
       - microservices-net
@@ -121,12 +98,11 @@ services:
     environment:
       PORT: 3003
       DB_NAME: orders_db
-      MONGO_URI: mongodb://mongodb:27017
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      MONGO_URI: mongodb+srv://Microservices:bKYdqlaYFoBezdrs@cluster0.tx6by.mongodb.net
+      RABBITMQ_URL: amqps://njzzrtsi:QMxQSYe7L4xzEvVHlfpeSpFrdl7WXnSC@campbell.lmq.cloudamqp.com/njzzrtsi
+      JWT_SECRET: 7b9e1c2a4f6d8b0e3a5c7d9f1b2e4a6c8d0f2e4b6d8a0c2e4f6a8b
     depends_on:
       mongodb:
-        condition: service_healthy
-      rabbitmq:
         condition: service_healthy
     networks:
       - microservices-net
@@ -134,8 +110,6 @@ services:
 
 # ─── Volumes ───────────────────────────────────────────────────────
 volumes:
-  rabbitmq_data:
-    driver: local
   mongodb_data:
     driver: local
 
