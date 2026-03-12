@@ -4,7 +4,7 @@ on:
   push:
     branches: [main, appu]
   pull_request:
-    branches: [appu]
+    branches: [appu, main]
 
 env:
   REGISTRY: ghcr.io
