@@ -19,6 +19,7 @@ spec:
       containers:
         - name: api-gateway
           image: ghcr.io/shantaveerkhyalap/api-gateway:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           envFrom:
@@ -104,6 +105,7 @@ spec:
       containers:
         - name: user-service
           image: microservices/user-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3001
           envFrom:
@@ -190,6 +192,7 @@ spec:
       containers:
         - name: product-service
           image: microservices/product-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3002
           envFrom:
@@ -276,6 +279,7 @@ spec:
       containers:
         - name: order-service
           image: ghcr.io/shantaveerkhyalap/order-service:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3003
           envFrom:
