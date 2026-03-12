@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: ghcr.io/shantaveerkhyalap/microservices/order-service:55529c9ed4234f4192210b8c9a07e2caaad6c32a
+          image: ghcr.io/shantaveerkhyalap/microservices/order-service:17be7bd808a4ba2c58383bac5be5b893d4e6dc47
           ports:
             - containerPort: 3003
           envFrom:
