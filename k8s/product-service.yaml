@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: ghcr.io/shantaveerkhyalap/microservices/product-service:94c5bf1d21528fd95c3a6f097e684501c2a8e5ef
+          image: ghcr.io/shantaveerkhyalap/microservices/product-service:d19f344dcb7ff3c6ef4bb02e5d1929f4fb5b9210
           ports:
             - containerPort: 3002
           envFrom:
