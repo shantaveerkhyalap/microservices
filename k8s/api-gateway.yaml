@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: ghcr.io/shantaveerkhyalap/microservices/api-gateway:08f89cfdbbdbaeeb98526742d2f1fe8eb29363f1
+          image: ghcr.io/shantaveerkhyalap/microservices/api-gateway:c44c04b2e418d8b608786b4f10edf6639244423b
           ports:
             - containerPort: 3000
           envFrom:
