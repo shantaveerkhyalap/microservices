@@ -9,7 +9,7 @@ app.get("/", (req, res) => {
         // simulate work, reduce number to avoid blocking too long
     }
     res.send("hello world");
-});
+}); 
 
 app.listen(4002, () => {
     console.log(`server is running on http://localhost:4002`);
