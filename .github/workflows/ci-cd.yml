@@ -15,10 +15,11 @@ jobs:
   test:
     name: Test ${{ matrix.service }}
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         service: [api-gateway, user-service, product-service, order-service]
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,12 +28,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
+          cache: npm
           cache-dependency-path: "**/package-lock.json"
 
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
-        run: npm ci
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "Lock file found → running npm ci"
+            npm ci
+          else
+            echo "No lock file → running npm install"
+            npm install
+          fi
 
       - name: Run linter
         working-directory: ${{ matrix.service }}
@@ -154,5 +162,6 @@ jobs:
           git add k8s/*.yaml
           git commit -m "chore(k8s): update images to ${{ github.sha }}" || echo "No changes to commit"
           git push
+
 
 
