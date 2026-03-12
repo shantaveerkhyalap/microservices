@@ -4,6 +4,8 @@
 # Start with a Node.js Alpine base for build efficiency
 FROM node:20-alpine AS builder
 
+RUN apk update && apk upgrade --no-cache
+
 # Directory during build
 WORKDIR /app/order-service
 
@@ -17,6 +19,8 @@ RUN npm ci --only=production
 # STAGE 2: Production Stage
 # ──────────────────────────────────────────────────────────────────────
 FROM node:20-alpine
+
+RUN apk update && apk upgrade --no-cache
 
 # Security: Creating non-root user
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup

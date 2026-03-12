@@ -4,6 +4,8 @@
 # Using node:20-alpine as the base image for a small, secure footprint
 FROM node:20-alpine AS builder
 
+RUN apk update && apk upgrade --no-cache
+
 # Set the working directory for the build process
 WORKDIR /app/api-gateway
 
@@ -18,6 +20,8 @@ RUN npm ci --only=production
 # STAGE 2: Production Stage
 # ──────────────────────────────────────────────────────────────────────
 FROM node:20-alpine
+
+RUN apk update && apk upgrade --no-cache
 
 # Create a non-root group and user for better security
 # This prevents the application from running with root privileges inside the container

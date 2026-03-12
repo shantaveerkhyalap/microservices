@@ -4,6 +4,8 @@
 # Base image for building the application
 FROM node:20-alpine AS builder
 
+RUN apk update && apk upgrade --no-cache
+
 # Working directory for build
 WORKDIR /app/product-service
 
@@ -17,6 +19,8 @@ RUN npm ci --only=production
 # STAGE 2: Production Stage
 # ──────────────────────────────────────────────────────────────────────
 FROM node:20-alpine
+
+RUN apk update && apk upgrade --no-cache
 
 # Security: Create a restricted user so the app doesn't run as root
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
