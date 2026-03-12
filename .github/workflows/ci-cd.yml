@@ -32,7 +32,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ${{ matrix.service }}
-        run: npm install
+        run: npm ci
 
       - name: Run linter
         working-directory: ${{ matrix.service }}
@@ -154,4 +154,5 @@ jobs:
           git add k8s/*.yaml
           git commit -m "chore(k8s): update images to ${{ github.sha }}" || echo "No changes to commit"
           git push
+
 
