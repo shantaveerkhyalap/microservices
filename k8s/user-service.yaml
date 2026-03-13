@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: ghcr.io/shantaveerkhyalap/microservices/user-service:517ab0d2bce3c56f6b765c255e1591b3012f509a
+          image: ghcr.io/shantaveerkhyalap/microservices/user-service:2d5ef6df8d911c41646ce430470166208d068329
           ports:
             - containerPort: 3001
           envFrom:
