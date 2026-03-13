@@ -96,4 +96,8 @@ process.on("SIGTERM", async () => {
     process.exit(0);
 });
 
-startService();
+if (require.main === module) {
+    startService();
+}
+
+module.exports = app;

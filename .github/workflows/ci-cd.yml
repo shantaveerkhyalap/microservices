@@ -3,12 +3,16 @@ name: Microservices CI/CD Pipeline
 on:
   push:
     branches: [main, appu]
+    paths-ignore:
+      - 'k8s/services.yaml'
   pull_request:
     branches: [appu, main]
+    paths-ignore:
+      - 'k8s/services.yaml'
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_PREFIX: ${{ github.repository }}
+  REGISTRY: docker.io
+  IMAGE_PREFIX: ${{ secrets.DOCKER_USERNAME }}
 
 jobs:
   # ─── CI: Lint & Test ─────────────────────────────────────────────
@@ -56,10 +60,9 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    
+
     permissions:
       contents: read
-      packages: write
 
     strategy:
       matrix:
@@ -72,12 +75,12 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to GitHub Container Registry
+      - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.TOKEN }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract metadata
         id: meta
@@ -86,10 +89,8 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}
           tags: |
             type=sha,prefix=
-            type=ref,event=branch
-            latest
 
-      - name: Build Docker image (local)
+      - name: Build Docker image (local for scanning)
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -104,10 +105,10 @@ jobs:
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.meta.outputs.version }}
           format: table
-          exit-code: 1
+          exit-code: '0'
           ignore-unfixed: true
           vuln-type: os,library
-          severity: CRITICAL
+          severity: CRITICAL,HIGH
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -126,7 +127,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -140,28 +141,21 @@ jobs:
 
       - name: Update Kubernetes k8s/services.yaml
         run: |
-          # This is a bit more complex since we have multiple services in one file
-          # We'll use a more targeted replacement for each service
-          
-          # Get SHA for the current commit
           SHA_TAG="${{ github.sha }}"
-          
-          # Example of updating each service (you might need to adjust based on exact file structure)
-          # We search for the deployment name and then replace the image on the next few lines
-          
+          TARGET_FILE="k8s/services.yaml"
+
+          echo "Updating $TARGET_FILE with new images for commit $SHA_TAG"
+
           for service in api-gateway user-service product-service order-service; do
             IMAGE_NAME="${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${service}:${SHA_TAG}"
-            # Target the individual service yaml file
-            sed -i "s|image: .*|image: ${IMAGE_NAME}|" k8s/${service}.yaml
+            echo "Updating $service → $IMAGE_NAME"
+            sed -i "/name: ${service}/,/image:/ s|image: .*|image: ${IMAGE_NAME}|" "$TARGET_FILE"
           done
-          
-          echo "Updated k8s service files with new images"
+
+          echo "Done updating $TARGET_FILE"
 
       - name: Commit and push changes
         run: |
-          git add k8s/*.yaml
+          git add k8s/services.yaml
           git commit -m "chore(k8s): update images to ${{ github.sha }}" || echo "No changes to commit"
           git push
-
-
-

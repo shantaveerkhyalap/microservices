@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: ghcr.io/shantaveerkhyalap/api-gateway:latest
+          image: docker.io/shantaveerkhyalap/api-gateway:39110e1106cd5ad593e62ef3e43098ecd354dcd2
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -104,7 +104,7 @@ spec:
     spec:
       containers:
         - name: user-service
-          image: microservices/user-service:latest
+          image: docker.io/shantaveerkhyalap/user-service:39110e1106cd5ad593e62ef3e43098ecd354dcd2
           imagePullPolicy: Always
           ports:
             - containerPort: 3001
@@ -191,7 +191,7 @@ spec:
     spec:
       containers:
         - name: product-service
-          image: microservices/product-service:latest
+          image: docker.io/shantaveerkhyalap/product-service:39110e1106cd5ad593e62ef3e43098ecd354dcd2
           imagePullPolicy: Always
           ports:
             - containerPort: 3002
@@ -278,7 +278,7 @@ spec:
     spec:
       containers:
         - name: order-service
-          image: ghcr.io/shantaveerkhyalap/order-service:latest
+          image: docker.io/shantaveerkhyalap/order-service:39110e1106cd5ad593e62ef3e43098ecd354dcd2
           imagePullPolicy: Always
           ports:
             - containerPort: 3003

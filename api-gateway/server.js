@@ -186,10 +186,39 @@ app.use((err, req, res, next) => {
 });
 
 // ─── Start Server ───────────────────────────────────────────────────
-app.listen(PORT, () => {
-    console.log(`\n🚀 API Gateway running on http://localhost:${PORT}`);
-    console.log(`📡 Routing to:`);
-    console.log(`   → User Service:    ${SERVICES.USER_SERVICE}`);
-    console.log(`   → Product Service: ${SERVICES.PRODUCT_SERVICE}`);
-    console.log(`   → Order Service:   ${SERVICES.ORDER_SERVICE}\n`);
-});
+if (require.main === module) {
+    const server = app.listen(PORT, () => {
+        console.log(`\n🚀 API Gateway running on http://localhost:${PORT}`);
+        console.log(`📡 Routing to:`);
+        console.log(`   → User Service:    ${SERVICES.USER_SERVICE}`);
+        console.log(`   → Product Service: ${SERVICES.PRODUCT_SERVICE}`);
+        console.log(`   → Order Service:   ${SERVICES.ORDER_SERVICE}\n`);
+    });
+
+    server.on("error", (err) => {
+        if (err.code === "EADDRINUSE") {
+            console.error(`\n❌ Port ${PORT} is already in use.`);
+            console.error(`   Run: kill -9 $(lsof -t -i:${PORT}) to free it, then restart.\n`);
+            process.exit(1);
+        } else {
+            throw err;
+        }
+    });
+
+    // ─── Graceful Shutdown ───────────────────────────────────────────────
+    process.on("SIGTERM", () => {
+        server.close(() => {
+            console.log("API Gateway shut down gracefully.");
+            process.exit(0);
+        });
+    });
+
+    process.on("SIGINT", () => {
+        server.close(() => {
+            console.log("API Gateway shut down gracefully.");
+            process.exit(0);
+        });
+    });
+}
+
+module.exports = app;
